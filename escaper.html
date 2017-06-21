@@ -1,0 +1,22 @@
+ <html>
+<head>
+</head>
+<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
+<div>
+<input type="text" data-bind="value: textToParse, valueUpdate: 'afterkeydown'" ></input>
+<span  data-bind="text: encoded" ></span>
+</div>
+<script>
+	function EscapedTextModel() {
+		var self = this;
+		self.textToParse = ko.observable();
+		self.encoded = ko.computed(function() {
+			return (self.textToParse()) ? encodeURI(self.textToParse()) : "";
+		});			
+	};
+	
+	ko.applyBindings(new EscapedTextModel());
+</script>
+</body>
+</html>
