@@ -1,22 +1,46 @@
  <html>
-<head>
-</head>
-<body>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
-<div>
-<input type="text" data-bind="value: textToParse, valueUpdate: 'afterkeydown'" ></input>
-<span  data-bind="text: encoded" ></span>
-</div>
-<script>
+	<head>
+	</head>
+	<body>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"/>
+		<script  src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+  integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g="
+  crossorigin="anonymous"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
+		<div class="container">
+			<div class="row">
+				<label>Type text to encode:</label>
+				<input type="text" data-bind="value: textToEncode, valueUpdate: 'afterkeydown'" />
+			</div>
+			<div class="row">
+				<label>Encoded text:</label>
+				<span data-bind="text: encoded" />
+			</div>
+			
+			<div class="row">
+				<label>Type text to decode:</label>
+				<input type="text" data-bind="value: textToDecode, valueUpdate: 'afterkeydown'" />
+			</div>
+			<div class="row">
+				<label>Decoded text:</label>
+				<span data-bind="text: decoded" />
+			</div>
+		</div>
+		<script>
 	function EscapedTextModel() {
 		var self = this;
-		self.textToParse = ko.observable();
+		self.textToEncode = ko.observable();
 		self.encoded = ko.computed(function() {
-			return (self.textToParse()) ? encodeURI(self.textToParse()) : "";
-		});			
+			return (self.textToEncode()) ? encodeURI(self.textToEncode()) : "";
+		});
+		self.textToDecode = ko.observable();
+		self.decoded = ko.computed(function() {
+			return (self.textToDecode()) ? decodeURI(self.textToDecode()) : "";
+		});
 	};
-	
+
 	ko.applyBindings(new EscapedTextModel());
-</script>
-</body>
+		</script>
+	</body>
 </html>
