@@ -23,7 +23,6 @@
 				</div>
 				</form>
 			</div>		
-
 			<div class="row">
 				<div class="col-md-3">
 					<label>Type text to decode:</label>
@@ -36,7 +35,20 @@
 					<div class="col-md-2">
 					<button data-bind="click: resetDecoded" class="btn btn-primary">Clear</button>
 				</div>
-			</div>		
+			</div>
+			<div class="row">
+				<div class="col-md-3">
+					<label>Type text to unescape:</label>
+					<textarea class="span8" rows="6" class="form-control" type="text" data-bind="value: textToUnescape, valueUpdate: 'afterkeydown'" ></textarea>
+				</div>
+				<div class="col-md-3">
+					<label>Escaped text:</label>
+					<span data-bind="text: unescaped" />
+				</div>
+					<div class="col-md-2">
+					<button data-bind="click: resetUnescaped" class="btn btn-primary">Clear</button>
+				</div>
+			</div>				
 		</div>
 		<script>
 	function EscapedTextModel() {
@@ -47,7 +59,11 @@
 		
 		self.textToDecode = ko.observable();
 		self.decoded = ko.computed(() => !!self.textToDecode() ? decodeURI(self.textToDecode()) : "");		
-		self.resetDecode = () => { self.textToDecode(""); };	
+		self.resetDecoded = () => { self.textToDecode(""); };	
+		
+		self.textToUnescape = ko.observable();
+		self.unescaped = ko.computed(() => !!self.textToUnescape() ? self.textToUnescape().replace(/\\/g, "") : "" );
+		self.resetUnescaped = () => { self.textToUnescape(""); };
 	};
 
 	ko.applyBindings(new EscapedTextModel());
