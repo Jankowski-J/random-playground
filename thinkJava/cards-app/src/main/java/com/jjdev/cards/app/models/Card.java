@@ -87,4 +87,8 @@ public class Card {
     public String toString() {
         return RANKS[this.rank] + " of " + SUITS[this.suit];
     }
+    
+    public static int compareCards(Card a, Card b) {
+        return a.compareTo(b);
+    }
 }

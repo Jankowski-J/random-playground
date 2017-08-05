@@ -91,17 +91,14 @@ public class Deck {
      * Finds the index of the lowest card between low and high inclusive.
      */
     public int indexLowest(int low, int high) {
-        Card lowCard = new Card(1, 3);
-        int lowIndex = -1;
-
+        int lowIndex = low;
         for (int idx = low; idx <= high; idx++) {
             Card c = cards[idx];
-            if (c.compareTo(lowCard) <= 0) {
-                lowCard = c;
+            if (c.compareTo(cards[lowIndex]) < 0) {
                 lowIndex = idx;
             }
         }
-        return lowIndex > 0 ? lowIndex : high;
+        return lowIndex;
     }
 
     /**
@@ -129,14 +126,46 @@ public class Deck {
      * Combines two previously sorted subdecks.
      */
     public static Deck merge(Deck d1, Deck d2) {
-        return null;
+        Deck result = new Deck(d1.cards.length + d2.cards.length);
+
+        int choice;
+        int i = 0;
+        int j = 0;
+        for (int k = 0; k < result.cards.length; k++) {
+            choice = 1;
+
+            if (i == d1.cards.length) {
+                choice = 2;
+            } else if (j == d2.cards.length) {
+                choice = 1;
+            } else if (Card.compareCards(d1.cards[i], d2.cards[j]) == 1) {
+                choice = 2;
+            }
+
+            if (choice == 1) {
+                result.cards[k] = d1.cards[i];
+                i++;
+            } else {
+                result.cards[k] = d2.cards[j];
+                j++;
+            }
+        }
+        return result;
     }
 
     /**
      * Returns a sorted copy of the deck using merge sort.
      */
     public Deck mergeSort() {
-        return this;
+        int mid = (cards.length - 1) / 2;
+
+        Deck d1 = subdeck(0, mid);
+        Deck d2 = subdeck(mid + 1, cards.length - 1);
+
+        d1.sort();
+        d2.sort();
+
+        return merge(d1, d2);
     }
 
     /**
@@ -145,4 +174,20 @@ public class Deck {
     public void insertionSort() {
     }
 
+    public int findHighestCard(int i) {
+        int index = i;
+        for (i = i + 1; i < cards.length; i++) {
+            if (Card.compareCards(cards[i], cards[index]) == -1) {
+                index = i;
+            }
+        }
+        return index;
+    }
+
+    public void sort() {
+        for (int i = 0; i < cards.length; i++) {
+            int j = findHighestCard(i);
+            swapCards(i, j);
+        }
+    }
 }
