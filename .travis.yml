@@ -1,5 +1,0 @@
-language: java
-
-script:
-    - cd thinkJava/cards-app
-    - mvn test -B
