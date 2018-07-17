@@ -1,0 +1,11 @@
+﻿@{
+  ViewBag.Title = "Home Page";
+}
+<div class="row">
+  @using(Html.BeginForm("UploadFiles", "Home", FormMethod.Post, new { enctype = "multipart/form-data" })){ 
+    <div>
+      <input type="file" multiple="true" name="files" id="files"/>
+      <input type="submit" class="btn btn-success" value="Send"/>
+    </div>
+  }
+</div>
