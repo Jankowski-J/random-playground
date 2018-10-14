@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>How long since?</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"/>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-debug.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js"
+            crossorigin="anonymous"></script>
+
+</head>
+<body>
+<div class="row">
+    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+        <label>Choose a date</label>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+        <input type="date" class="form-control" data-bind="value: newDate" title="New date to check"/>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+        <button class="btn btn-success" data-bind="click: addDate">Add</button>
+    </div>
+</div>
+<div class="row" data-bind="foreach: dates">
+    <div  class="col-lg-12 col-md-12">
+        <label data-bind="text: date.toLocaleDateString()"></label>
+    </div>
+</div>
+<script type="text/javascript">
+    
+    function MyViewModel() {
+        const self = this;
+        self.dates = ko.observableArray([ {date: new Date()}]);
+        self.addDate = () => {
+            const newDateObject = {date: new Date(self.newDate)};
+            console.log(newDateObject);
+            self.dates.push(newDateObject);
+        };
+        self.newDate = new Date();
+    }
+    
+    ko.applyBindings(new MyViewModel());
+</script>
+</body>
+</html>
