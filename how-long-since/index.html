@@ -11,33 +11,40 @@
 
 </head>
 <body>
-<div class="row">
-    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-        <label>Choose a date</label>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+            <label>Choose a date</label>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+            <input type="date" class="form-control" data-bind="value: newDate" id="new-date-input" title="New date to check"/>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+            <button class="btn btn-success" data-bind="click: addDate">Add</button>
+        </div>
     </div>
-    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-        <input type="date" class="form-control" data-bind="value: newDate" title="New date to check"/>
-    </div>
-    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-        <button class="btn btn-success" data-bind="click: addDate">Add</button>
-    </div>
-</div>
-<div class="row" data-bind="foreach: dates">
-    <div  class="col-lg-12 col-md-12">
-        <label data-bind="text: date.toLocaleDateString()"></label>
+    <div class="row" data-bind="foreach: dates">
+        <div class="col-lg-12 col-md-12">
+            <label data-bind="text: date.toLocaleDateString()"></label>
+            <label data-bind="text: differenceInDays"></label>
+        </div>
     </div>
 </div>
 <script type="text/javascript">
-    
+
     function MyViewModel() {
         const self = this;
-        self.dates = ko.observableArray([ {date: new Date()}]);
+        self.dates = ko.observableArray([]);
         self.addDate = () => {
-            const newDateObject = {date: new Date(self.newDate)};
-            console.log(newDateObject);
+            const newDate = new Date(self.newDate);
+            const diff = new Date() - newDate;
+            const diffDays = Math.ceil(diff / (1000 * 3600 * 24)) - 1;
+            const formattedDays = `(${diffDays} days ago)`;
+            const newDateObject = {date: newDate, differenceInDays: formattedDays};
             self.dates.push(newDateObject);
         };
         self.newDate = new Date();
+        console.log(self.newDate);
     }
     
     ko.applyBindings(new MyViewModel());
