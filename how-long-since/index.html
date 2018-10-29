@@ -17,11 +17,13 @@
             <label>Choose a date</label>
         </div>
         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-            <input type="date" class="form-control" data-bind="value: newDate" id="new-date-input" title="New date to check"/>
+            <input type="date" class="form-control" data-bind="value: newDate" id="new-date-input"
+                   title="New date to check"/>
         </div>
         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
             <button class="btn btn-success" data-bind="click: addDate">Add</button>
         </div>
+
     </div>
     <div class="row" data-bind="foreach: dates">
         <div class="col-lg-12 col-md-12">
@@ -29,25 +31,48 @@
             <label data-bind="text: differenceInDays"></label>
         </div>
     </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <button class="btn btn-warning" data-bind="click: clear">Clear</button>
+        </div>
+    </div>
 </div>
 <script type="text/javascript">
 
-    function MyViewModel() {
+    function DatesListViewModel() {
         const self = this;
-        self.dates = ko.observableArray([]);
+        
+        self.loadDates = () => {
+            let rawDates = localStorage.getItem("dates");
+            let dates = (!!rawDates) ? JSON.parse(rawDates) : [];
+            dates = dates.map(x => {
+                return {differenceInDays: x.differenceInDays, date: new Date(x.date)}
+            });
+            self.dates = ko.observableArray(dates);
+        };
+     
         self.addDate = () => {
             const newDate = new Date(self.newDate);
             const diff = new Date() - newDate;
-            const diffDays = Math.ceil(diff / (1000 * 3600 * 24)) - 1;
-            const formattedDays = `(${diffDays} days ago)`;
-            const newDateObject = {date: newDate, differenceInDays: formattedDays};
+            const daysDiff = Math.ceil(diff / (1000 * 3600 * 24)) - 1;
+            const formattedDaysDiff = `(${daysDiff} days ago)`;
+            const newDateObject = {date: newDate, differenceInDays: formattedDaysDiff};
             self.dates.push(newDateObject);
+
+            const slicedDates = self.dates().slice(0);
+            const serialized = JSON.stringify(slicedDates);
+            localStorage.setItem("dates", serialized);
+        };
+
+        self.clear = () => {
+            localStorage.clear();
+            self.dates.removeAll();
         };
         self.newDate = new Date();
-        console.log(self.newDate);
+        self.loadDates();
     }
-    
-    ko.applyBindings(new MyViewModel());
+
+    ko.applyBindings(new DatesListViewModel());
 </script>
 </body>
 </html>
