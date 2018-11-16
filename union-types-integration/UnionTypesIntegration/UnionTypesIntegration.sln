@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "UnionTypes.Lib", "UnionTypes.Lib\UnionTypes.Lib.fsproj", "{90085CB3-B9A3-4466-9C53-C75150526EEE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnionTypes.Console", "UnionTypes.Console\UnionTypes.Console.csproj", "{8D3F21B4-B334-432D-8627-734F787FDADB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{90085CB3-B9A3-4466-9C53-C75150526EEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90085CB3-B9A3-4466-9C53-C75150526EEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90085CB3-B9A3-4466-9C53-C75150526EEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90085CB3-B9A3-4466-9C53-C75150526EEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D3F21B4-B334-432D-8627-734F787FDADB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D3F21B4-B334-432D-8627-734F787FDADB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D3F21B4-B334-432D-8627-734F787FDADB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D3F21B4-B334-432D-8627-734F787FDADB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

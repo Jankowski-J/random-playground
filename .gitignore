@@ -4,4 +4,6 @@
 /asp-net-mvc-integration/packages
 /asp-net-mvc-integration/SampleWebApp/obj
 /asp-net-mvc-integration/SampleWebApp/bin
-/asp-net-mvc-integration/.idea
+/**/*.idea
+/**/bin
+/**/obj
