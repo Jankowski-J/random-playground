@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>How long since?</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"/>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-debug.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js"
+            crossorigin="anonymous"></script>
+
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+            <label>Choose a date</label>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+            <input type="date" class="form-control" data-bind="value: newDate" id="new-date-input"
+                   title="New date to check"/>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+            <button class="btn btn-success" data-bind="click: addDate">Add</button>
+        </div>
+
+    </div>
+    <div class="row" data-bind="foreach: dates">
+        <div class="col-lg-12 col-md-12">
+            <label data-bind="text: date.toLocaleDateString()"></label>
+            <label data-bind="text: differenceInDays"></label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <button class="btn btn-warning" data-bind="click: clear">Clear</button>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    function DatesListViewModel() {
+        const self = this;
+        
+        self.loadDates = () => {
+            let rawDates = localStorage.getItem("dates");
+            let dates = (!!rawDates) ? JSON.parse(rawDates) : [];
+            dates = dates.map(x => {
+                return {differenceInDays: x.differenceInDays, date: new Date(x.date)}
+            });
+            self.dates = ko.observableArray(dates);
+        };
+     
+        self.addDate = () => {
+            const newDate = new Date(self.newDate);
+            const diff = new Date() - newDate;
+            const daysDiff = Math.ceil(diff / (1000 * 3600 * 24)) - 1;
+            const formattedDaysDiff = `(${daysDiff} days ago)`;
+            const newDateObject = {date: newDate, differenceInDays: formattedDaysDiff};
+            self.dates.push(newDateObject);
+
+            const slicedDates = self.dates().slice(0);
+            const serialized = JSON.stringify(slicedDates);
+            localStorage.setItem("dates", serialized);
+        };
+
+        self.clear = () => {
+            localStorage.clear();
+            self.dates.removeAll();
+        };
+        self.newDate = new Date();
+        self.loadDates();
+    }
+
+    ko.applyBindings(new DatesListViewModel());
+</script>
+</body>
+</html>
