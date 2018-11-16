@@ -4,7 +4,11 @@
     <meta charset="UTF-8">
     <title>How long since?</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"/>
+    <link title="timeline-styles" rel="stylesheet"
+          href="https://cdn.knightlab.com/libs/timeline3/latest/css/timeline.css">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+
+    <script src="https://cdn.knightlab.com/libs/timeline3/latest/js/timeline.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-debug.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js"
             crossorigin="anonymous"></script>
@@ -36,12 +40,13 @@
             <button class="btn btn-warning" data-bind="click: clear">Clear</button>
         </div>
     </div>
+    <div id='timeline-embed' style="width: 100%; height: 600px"></div>
 </div>
 <script type="text/javascript">
 
     function DatesListViewModel() {
         const self = this;
-        
+
         self.loadDates = () => {
             let rawDates = localStorage.getItem("dates");
             let dates = (!!rawDates) ? JSON.parse(rawDates) : [];
@@ -50,7 +55,7 @@
             });
             self.dates = ko.observableArray(dates);
         };
-     
+
         self.addDate = () => {
             const newDate = new Date(self.newDate);
             const diff = new Date() - newDate;
@@ -73,6 +78,34 @@
     }
 
     ko.applyBindings(new DatesListViewModel());
+
+    const jason = {
+        events: [
+            {
+                start_date: {year: 1993, month: 3, day: 1},
+                text: {text: "Przyjście na świat", headline: "Narodziny"}
+            },
+            {
+                start_date: {year: 2018, month: 3, day: 1},
+                text: {text: "25 lat ukończone", headline: "dwajścia pięć!"}
+            }
+        ],
+        eras: [
+            {
+                start_date: {year: 1993, month: 1, day: 1},
+                end_date: {year: 1993, month:5, day: 1}
+            },
+            {
+                start_date: {year: 2018, month: 1, day: 1},
+                end_date: {year: 2018, month:5, day: 1}
+            }
+        ]
+
+    };
+    //timeline = new TL.Timeline('timeline-embed',
+    //  'https://docs.google.com/spreadsheets/d/1cWqQBZCkX9GpzFtxCWHoqFXCHg-ylTVUWlnrdYMzKUI/pubhtml');
+    timeline = new TL.Timeline('timeline-embed',
+        jason);
 </script>
 </body>
 </html>
