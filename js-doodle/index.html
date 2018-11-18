@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Derp</title>
+</head>
+<body>
+<div class="container">
+    <canvas id="doodling-canvas" width="500" height="500"></canvas>
+</div>
+<button id="next-step-button" onclick="nextStep()">Next step</button>
+</body>
+<script type="text/javascript">
+    const standardStep = 50;
+    const diagonalStep = standardStep;
+
+    const currentPosition = {x: 0, y: 0};
+    const Directions = {
+        Right: {
+            name: "Right",
+            xStep: standardStep,
+            yStep: 0
+        },
+        Up: {
+            name: "Up",
+            yStep: -standardStep,
+            xStep: 0
+        },
+        Left: {
+            name: "Left",
+            xStep: -standardStep,
+            yStep: 0
+        },
+        Down: {
+            name: "Down",
+            xStep: 0,
+            yStep: standardStep
+        },
+        UpRight: {
+            name: "UpRight",
+            xStep: diagonalStep,
+            yStep: -diagonalStep
+        },
+        UpLeft: {
+            name: "UpLeft",
+            xStep: -diagonalStep,
+            yStep: -diagonalStep
+        },
+        DownRight: {
+            name: "DownRight",
+            xStep: diagonalStep,
+            yStep: diagonalStep
+        },
+        DownLeft: {
+            name: "DownLeft",
+            xStep: -diagonalStep,
+            yStep: diagonalStep
+        }
+    };
+
+    function getCanvasContext() {
+        const canvas = document.getElementById("doodling-canvas");
+        return canvas.getContext("2d");
+    }
+
+    function rgbToHex(r, g, b) {
+        if (r > 255 || g > 255 || b > 255)
+            throw "Invalid color component";
+        return ((r << 16) | (g << 8) | b).toString(16);
+    }
+
+    function getLegalDirections(context, x, y) {
+        const canvas = context.canvas;
+
+        const maxWidth = canvas.width;
+        const maxHeight = canvas.height;
+
+        const legalDirections = [];
+
+        if (x + standardStep <= maxWidth) {
+            legalDirections.push(Directions.Right);
+        }
+
+        if (x - standardStep >= 0) {
+            legalDirections.push(Directions.Left);
+        }
+
+        if (y + standardStep <= maxHeight) {
+            legalDirections.push(Directions.Down)
+        }
+
+        if (y - standardStep >= 0) {
+            legalDirections.push(Directions.Up);
+        }
+
+        if (x + diagonalStep <= maxWidth && y + diagonalStep <= maxHeight) {
+            legalDirections.push(Directions.DownRight);
+        }
+
+        if (x - diagonalStep >= 0 && y + diagonalStep <= maxHeight) {
+            legalDirections.push(Directions.DownLeft);
+        }
+
+        if (x + diagonalStep <= maxWidth && y - diagonalStep >= 0) {
+            legalDirections.push(Directions.UpRight);
+        }
+
+        if (x - diagonalStep >= 0 && y - diagonalStep >= 0) {
+            legalDirections.push(Directions.UpLeft);
+        }
+
+        return legalDirections;
+    }
+
+    function drawLine(context, x0, y0, x1, y1) {
+        context.strokeStyle = "#0000FF";
+        var currX = x0;
+        var currY = y0;
+        var xStep = (x1 - x0) !== 0 ? Math.abs(x1 - x0) / (x1 - x0) : 0;
+        var yStep = (y1 - y0) !== 0 ? Math.abs(y1 - y0) / (y1 - y0) : 0;
+
+        while (currX != x1 || currY != y1) {
+            context.beginPath();
+            context.moveTo(currX, currY);
+            var p = context.getImageData(currX + xStep, currY + yStep, 1, 1).data;
+            if(p[0] > 0 || p[1] > 0 || p[2] > 0 ){
+                context.stroke();
+                break;
+            }
+            
+            context.lineTo(currX + xStep, currY + yStep);
+            context.stroke();
+            currX += xStep;
+            currY += yStep;
+        }
+
+        currentPosition.x = currX;
+        currentPosition.y = currY;
+    }
+
+    function nextStep() {
+        var context = getCanvasContext();
+        var legalDirections = getLegalDirections(context, currentPosition.x, currentPosition.y);
+
+        var directionIndex = Math.floor(Math.random() * legalDirections.length);
+        var direction = legalDirections[directionIndex];
+
+        console.log("GOING:", direction.name);
+
+        var x0 = currentPosition.x;
+        var y0 = currentPosition.y;
+
+        var x1 = x0 + direction.xStep;
+        var y1 = y0 + direction.yStep;
+
+        drawLine(context, x0, y0, x1, y1);
+    }
+
+</script>
+</html>

@@ -1,0 +1,1 @@
+https://stackoverflow.com/questions/6735470/get-pixel-color-from-canvas-on-mouseover
