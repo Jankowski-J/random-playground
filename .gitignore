@@ -9,3 +9,5 @@
 /**/obj
 /**/.suo
 /**/.vs
+/**/node_modules
+/**/yarn-error.log
