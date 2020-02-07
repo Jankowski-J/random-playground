@@ -1,35 +1,12 @@
 const {GraphQLServer} = require('graphql-yoga');
 
-const typeDefs = `
-type Query {
-    info: String!
-    feed: [Link!]!
-    authors: [Person!]!
-}
-
-type Link {
-    id: ID!
-    description: String!
-    url: String!
-}
-
-type Person {
-    name: String!
-    age: Int!
-    bebech: Bebech
-}
-
-type Bebech {
-    capacity: Float!
-    items: [String!]!
-}
-`;
-
 let links = [{
     id: 'link-0',
     url: 'www.howtographql.com',
     description: 'Fullstack tutorial for GraphQL'
 }];
+
+let idCount = links.length;
 
 let people = [
     {
@@ -46,12 +23,8 @@ const resolvers = {
     Query: {
         info: () => `This is the API of a Hackernews Clone`,
         feed: () => links,
-        authors: () => people
-    },
-    Link: {
-        id: (parent) => parent.id,
-        description: (parent) => parent.description,
-        url: (parent) => parent.url,
+        authors: () => people,
+        link: (id) => links.find(x => x.id === id)
     },
     Person: {
         name: (parent) => parent.name,
@@ -61,11 +34,35 @@ const resolvers = {
     Bebech: {
         capacity: (parent) => parent.capacity,
         items: (parent) => parent.items
-    }
+    },
+    Mutation: {
+        // 2
+        post: (parent, args) => {
+            const link = {
+                id: `link-${idCount++}`,
+                description: args.description,
+                url: args.url,
+            };
+            links.push(link);
+            return link
+        },
+        updateLink: (parent, args) => {
+            const linkIndex = links.findIndex(x => x.id === args.id);
+            const link = links[linkIndex];
+            link.url = args.url;
+            link.description = args.description;
+            return link;
+        },
+        deleteLink: (id) => {
+            const linkIndex = links.findIndex(x => x.id === id);
+            const spliced = links.splice(linkIndex, 1);
+            return spliced[0];
+        }
+    },
 };
 
 const server = new GraphQLServer({
-    typeDefs,
+    typeDefs: './src/schema.graphql',
     resolvers
 });
 
