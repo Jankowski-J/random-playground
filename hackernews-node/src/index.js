@@ -1,12 +1,5 @@
 const {GraphQLServer} = require('graphql-yoga');
-
-let links = [{
-    id: 'link-0',
-    url: 'www.howtographql.com',
-    description: 'Fullstack tutorial for GraphQL'
-}];
-
-let idCount = links.length;
+const {prisma} = require('./generated/prisma-client');
 
 let people = [
     {
@@ -22,7 +15,9 @@ let people = [
 const resolvers = {
     Query: {
         info: () => `This is the API of a Hackernews Clone`,
-        feed: () => links,
+        feed: (root, args, context, info) => {
+            return context.prisma.links()
+        },
         authors: () => people,
         link: (id) => links.find(x => x.id === id)
     },
@@ -37,33 +32,31 @@ const resolvers = {
     },
     Mutation: {
         // 2
-        post: (parent, args) => {
-            const link = {
-                id: `link-${idCount++}`,
-                description: args.description,
+        post: (root, args, context) => {
+            return context.prisma.createLink({
                 url: args.url,
-            };
-            links.push(link);
-            return link
+                description: args.description,
+            })
         },
-        updateLink: (parent, args) => {
-            const linkIndex = links.findIndex(x => x.id === args.id);
-            const link = links[linkIndex];
-            link.url = args.url;
-            link.description = args.description;
-            return link;
-        },
-        deleteLink: (id) => {
-            const linkIndex = links.findIndex(x => x.id === id);
-            const spliced = links.splice(linkIndex, 1);
-            return spliced[0];
-        }
+        // updateLink: (parent, args) => {
+        //     const linkIndex = links.findIndex(x => x.id === args.id);
+        //     const link = links[linkIndex];
+        //     link.url = args.url;
+        //     link.description = args.description;
+        //     return link;
+        // },
+        // deleteLink: (id) => {
+        //     const linkIndex = links.findIndex(x => x.id === id);
+        //     const spliced = links.splice(linkIndex, 1);
+        //     return spliced[0];
+        // }
     },
 };
 
 const server = new GraphQLServer({
     typeDefs: './src/schema.graphql',
-    resolvers
+    resolvers,
+    context: {prisma}
 });
 
 server.start(() => console.log('Server is running on http://localhost:4000'));
